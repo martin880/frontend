@@ -27,6 +27,7 @@ const EditUser = () => {
                 title:"User has been updated",
                 status:"success",
                 duration:3000,
+                position:"top-right",
                 isClosable:false
             });
             navigate("/");
@@ -35,6 +36,7 @@ const EditUser = () => {
                 title:"There is error when input user",
                 status:'error',
                 duration:3000,
+                position:"top",
                 isClosable:false
             });
             console.log(error);
@@ -70,7 +72,8 @@ const EditUser = () => {
                 <Box mt={2}>
                     <HStack>
                         <Button size={'sm'} w={'20%'} type='submit' colorScheme='twitter'>Update</Button>
-                        <Button size={'sm'} w={'20%'} colorScheme={'orange'}><Link to={'/'}>Cancel</Link></Button>
+                        <Button size={'sm'} w={'20%'} colorScheme={'orange'}><Link to={'/'} 
+                        onClick={() => toast({title:"Update user canceled", status:"warning", position:"top-right", duration:3000, isClosable:false})}>Cancel</Link></Button>
                     </HStack>
                 </Box>
             </form>

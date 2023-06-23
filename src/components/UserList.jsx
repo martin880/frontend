@@ -1,33 +1,69 @@
 import {
     useToast,
     Box,
+    Button,
     HStack,
     VStack,
     Text,
     Spacer,
     StackDivider,
     IconButton,
-    Stack
+    Stack,
+    Input,
+    InputGroup,
+    InputRightElement,
+    useDisclosure,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton
 } from '@chakra-ui/react';
 import React,{useState, useEffect} from 'react';
 import axios from "axios";
 import { Link } from 'react-router-dom';
-import { FaTrash, FaEdit,FaPlus } from "react-icons/fa";
+import { FaTrash, FaEdit,FaPlus,FaSearch } from "react-icons/fa";
 
 const UserList = () => {
 
     const [users, setUsers] = useState([]);
+    const [page, setPage] = useState(0);
+    const [limit, setLimit] = useState(10);
+    const [pages, setPages] = useState(0);
+    const [rows, setRows] = useState(0);
+    const [keyword, setKeyword] = useState("");
+    const [query, setQuery] = useState("");
+    const [msg, setMsg] = useState("");
+
     const toast = useToast();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
         getUsers();
     },[]);
+    
+    // useEffect(() => {
+    //     getUsersByName();
+    // },[keyword]);
 
     const getUsers = async() => {
-        const response = await axios.get('http://localhost:2000/users');
+        const response = await axios.get(`http://localhost:2000/users`);
         console.log(response.data);
         setUsers(response.data);
     }
+    
+    // const getUsersByName = async() => {
+    //     const response = await axios.get(
+    //         `http://localhost:2000/users/v3?search_query=${keyword}&page=${page}&limit=${limit}`
+    //     );
+    //     console.log(response.data);
+    //     setUsers(response.data);
+    //     setPage(response.data.page);
+    //     setPages(response.data.totalPages);
+    //     setRows(response.data.totalRows);
+    // }
 
     const deleteUser = async(id) => {
         try {
@@ -48,9 +84,17 @@ const UserList = () => {
             });
         }
     }
+
+    const searchData = (e) => {
+        e.preventDefault();
+        setPage(0);
+        setMsg("");
+        setKeyword(query);
+      };
     
     return (
             <>
+                <form onSubmit={searchData}>
                 <VStack
                     divider={<StackDivider />}
                     borderColor={"gray.100"}
@@ -62,6 +106,18 @@ const UserList = () => {
                     maxW={{ base: "90vw", sm: "80vw", lg: "50vw", xl: "40vw" }}
                 >
                     <HStack>
+                    <InputGroup size='md'>
+                        <Input
+                            pr='4.5rem'
+                            placeholder='search name'
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+
+                        />
+                        <InputRightElement width='2.5rem'>
+                            <IconButton icon={<FaSearch/>} type='submit' h='2.00rem' size='sm' isRound={"true"}></IconButton>
+                        </InputRightElement>
+                        </InputGroup>
                         <Link to={'add'}>
                             <IconButton
                                 icon={<FaPlus />}
@@ -101,13 +157,38 @@ const UserList = () => {
                                         isRound={"true"}
                                         size={'sm'}
                                         cursor={'pointer'}
-                                        onClick={() => deleteUser(user.id)}
+                                        onClick={onOpen}
                                     ></IconButton>
                                 </HStack>
                             </Stack>
+                            <Modal isOpen={isOpen} onClose={onClose} size={'sm'}>
+                            <ModalOverlay />
+                                <ModalContent>
+                                <ModalHeader>Warning !!!</ModalHeader>
+                                <ModalCloseButton />
+                                <ModalBody pb={6}>
+                                    Are you sure want to delete data with name {user.name} ?
+                                </ModalBody>
+
+                                <ModalFooter>
+                                    <Button colorScheme='red' size={'sm'} mr={3} onClick={() =>{deleteUser(user.id); onClose()}}>
+                                        Delete
+                                    </Button>
+                                    <Button colorScheme={'orange'} size={'sm'} 
+                                        onClick={() => {toast({
+                                            title:"Delete user canceled",
+                                            status:"info",
+                                            duration:3000,
+                                            position:"top-right",
+                                            isClosable:false
+                                        }); onClose()}}>Cancel</Button>
+                                </ModalFooter>
+                            </ModalContent>
+                        </Modal>
                         </HStack>
                     ))}
                 </VStack>
+                </form>
             </>
     );
 }

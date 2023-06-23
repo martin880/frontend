@@ -11,18 +11,18 @@ import {VStack} from "@chakra-ui/react";
 function App() {
   return (
 		<>
-		<Navbar/>
+			<Navbar/>
 			<Title/>
-				<VStack p={4}>
-					<BrowserRouter>
-							<Routes>
-								<Route path="/" element={<UserList/>}/>
-								<Route path="add" element={<AddUser/>}/>
-								<Route path="edit/:id" element={<EditUser/>}/>
-								<Route path="view/:id" element={<ProfileUser/>}/>
-							</Routes>
-					</BrowserRouter>
-				</VStack>
+			<VStack p={4}>
+				<BrowserRouter>
+						<Routes>
+							<Route path="/" element={<UserList/>}/>
+							<Route path="add" element={<AddUser/>}/>
+							<Route path="edit/:id" element={<EditUser/>}/>
+							<Route path="view/:id" element={<ProfileUser/>}/>
+						</Routes>
+				</BrowserRouter>
+			</VStack>
 		</>
   );
 }

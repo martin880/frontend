@@ -12,7 +12,8 @@ import {
   } from '@chakra-ui/react';
 import React,{useState, useEffect} from 'react';
 import axios from 'axios';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import Camera from "../../src/assets/camera.png";
 
   
   export default function ProfileUser() {
@@ -60,6 +61,20 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
                 alt={'Author'}
                 css={{
                     border: '2px solid white',
+                }}
+                mb={4}
+                pos={'relative'}
+                _after={{
+                    content: '""',
+                    w: 4,
+                    h: 4,
+                    bg:'green',
+                    border: '2px solid white',
+                    rounded: 'full',
+                    pos: 'absolute',
+                    bottom: 0,
+                    right: 2,
+                    cursor:"pointer",
                 }}
                 />
             </Flex>
