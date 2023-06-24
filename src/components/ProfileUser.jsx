@@ -13,16 +13,20 @@ import {
 import React,{useState, useEffect} from 'react';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
-import Camera from "../../src/assets/camera.png";
-
   
   export default function ProfileUser() {
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [gender, setGender] = useState('');
+    const [image, setImages] = useState('https://fakeimg.pl/350x200/');
+    const [saveImage, setSaveImage] = useState(null);
     
     const {id} = useParams();
+
+    const handleUploadChange = (e) => {
+        console.log(e.target.files[0]);
+    }
 
     useEffect(() => {
         getUserById();
@@ -36,9 +40,9 @@ import Camera from "../../src/assets/camera.png";
     }
 
     return (
-      <Center py={6}>
+      <Center py={4}>
             <Box
-            maxW={'270px'}
+            maxW={'300px'}
             w={'full'}
             bg={useColorModeValue('white', 'gray.800')}
             boxShadow={'2xl'}
@@ -55,9 +59,7 @@ import Camera from "../../src/assets/camera.png";
             <Flex justify={'center'} mt={-12}>
                 <Avatar
                 size={'xl'}
-                src={
-                    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ'
-                }
+                src={image}
                 alt={'Author'}
                 css={{
                     border: '2px solid white',
@@ -76,14 +78,15 @@ import Camera from "../../src/assets/camera.png";
                     right: 2,
                     cursor:"pointer",
                 }}
+                onChange={handleUploadChange}
                 />
             </Flex>
             <Box p={6}>
                 <Stack spacing={0} align={'center'} mb={5}>
-                <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
+                <Heading display={'flex'} fontSize={'lg'} fontWeight={500} fontFamily={'body'} alignItems={'center'}>
                     {name}
                 </Heading>
-                    <Text color={'gray.500'}>{email}</Text>
+                    <Text fontSize={'sm'} color={'gray.500'}>{email}</Text>
                     <Text color={'gray.500'}>{gender}</Text>
                 </Stack>
     
@@ -97,7 +100,7 @@ import Camera from "../../src/assets/camera.png";
                 <Stack spacing={0} align={'center'}>
                     <Text fontWeight={600}>23k</Text>
                     <Text fontSize={'sm'} color={'gray.500'}>
-                    Followers
+                    Followed
                     </Text>
                 </Stack>
                 </Stack>

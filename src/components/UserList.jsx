@@ -12,14 +12,7 @@ import {
     Input,
     InputGroup,
     InputRightElement,
-    useDisclosure,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton
+    useDisclosure
 } from '@chakra-ui/react';
 import React,{useState, useEffect} from 'react';
 import axios from "axios";
@@ -38,7 +31,6 @@ const UserList = () => {
     const [msg, setMsg] = useState("");
 
     const toast = useToast();
-    const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
         getUsers();
@@ -157,34 +149,10 @@ const UserList = () => {
                                         isRound={"true"}
                                         size={'sm'}
                                         cursor={'pointer'}
-                                        onClick={onOpen}
+                                        onClick={() =>{deleteUser(user.id)}}
                                     ></IconButton>
                                 </HStack>
                             </Stack>
-                            <Modal isOpen={isOpen} onClose={onClose} size={'sm'}>
-                            <ModalOverlay />
-                                <ModalContent>
-                                <ModalHeader>Warning !!!</ModalHeader>
-                                <ModalCloseButton />
-                                <ModalBody pb={6}>
-                                    Are you sure want to delete data with name {user.name} ?
-                                </ModalBody>
-
-                                <ModalFooter>
-                                    <Button colorScheme='red' size={'sm'} mr={3} onClick={() =>{deleteUser(user.id); onClose()}}>
-                                        Delete
-                                    </Button>
-                                    <Button colorScheme={'orange'} size={'sm'} 
-                                        onClick={() => {toast({
-                                            title:"Delete user canceled",
-                                            status:"info",
-                                            duration:3000,
-                                            position:"top-right",
-                                            isClosable:false
-                                        }); onClose()}}>Cancel</Button>
-                                </ModalFooter>
-                            </ModalContent>
-                        </Modal>
                         </HStack>
                     ))}
                 </VStack>
