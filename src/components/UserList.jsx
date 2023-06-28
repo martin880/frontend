@@ -1,7 +1,6 @@
 import {
     useToast,
     Box,
-    Button,
     HStack,
     VStack,
     Text,
@@ -12,7 +11,6 @@ import {
     Input,
     InputGroup,
     InputRightElement,
-    useDisclosure
 } from '@chakra-ui/react';
 import React,{useState, useEffect} from 'react';
 import axios from "axios";
@@ -22,23 +20,14 @@ import { FaTrash, FaEdit,FaPlus,FaSearch } from "react-icons/fa";
 const UserList = () => {
 
     const [users, setUsers] = useState([]);
-    const [page, setPage] = useState(0);
-    const [limit, setLimit] = useState(10);
-    const [pages, setPages] = useState(0);
-    const [rows, setRows] = useState(0);
     const [keyword, setKeyword] = useState("");
     const [query, setQuery] = useState("");
-    const [msg, setMsg] = useState("");
-
+    
     const toast = useToast();
 
     useEffect(() => {
         getUsers();
     },[]);
-    
-    // useEffect(() => {
-    //     getUsersByName();
-    // },[keyword]);
 
     const getUsers = async() => {
         const response = await axios.get(`http://localhost:2000/users`);
@@ -46,16 +35,29 @@ const UserList = () => {
         setUsers(response.data);
     }
     
-    // const getUsersByName = async() => {
-    //     const response = await axios.get(
-    //         `http://localhost:2000/users/v3?search_query=${keyword}&page=${page}&limit=${limit}`
-    //     );
-    //     console.log(response.data);
-    //     setUsers(response.data);
-    //     setPage(response.data.page);
-    //     setPages(response.data.totalPages);
-    //     setRows(response.data.totalRows);
-    // }
+    
+    useEffect(() => {
+        axios.get(`http://localhost:2000/users`)
+            .then((response) => {
+                setUsers(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+    
+    // Codingan ini bikin error
+    // useEffect(() => {
+    //     getUsersByName();
+    // },[keyword]);
+
+    const getUsersByName = async() => {
+        const response = await axios.get(
+            `http://localhost:2000/users/v3?search_query=${keyword}`
+        );
+        console.log(response.data);
+        setUsers(response.data);
+    }
 
     const deleteUser = async(id) => {
         try {
@@ -79,9 +81,8 @@ const UserList = () => {
 
     const searchData = (e) => {
         e.preventDefault();
-        setPage(0);
-        setMsg("");
         setKeyword(query);
+        // getUsersByName();
       };
     
     return (
@@ -109,7 +110,7 @@ const UserList = () => {
                         <InputRightElement width='2.5rem'>
                             <IconButton icon={<FaSearch/>} type='submit' h='2.00rem' size='sm' isRound={"true"}></IconButton>
                         </InputRightElement>
-                        </InputGroup>
+                    </InputGroup>
                         <Link to={'add'}>
                             <IconButton
                                 icon={<FaPlus />}

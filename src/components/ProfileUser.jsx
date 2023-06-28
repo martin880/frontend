@@ -13,6 +13,7 @@ import {
 import React,{useState, useEffect} from 'react';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
+import { useMutation, useQueryClient } from 'react-query';
   
   export default function ProfileUser() {
 
@@ -20,13 +21,32 @@ import { Link, useParams } from 'react-router-dom';
     const [email, setEmail] = useState('');
     const [gender, setGender] = useState('');
     const [image, setImages] = useState('https://fakeimg.pl/350x200/');
-    const [saveImage, setSaveImage] = useState(null);
+    const [file, setFile] = useState(null);
     
     const {id} = useParams();
 
-    const handleUploadChange = (e) => {
-        console.log(e.target.files[0]);
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation();
+
+    const upload = async () => {
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            const res = await axios.post("/upload", formData);
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
     }
+
+    const handleClick = async (e) => {
+        e.preventDefault();
+        let imgUrl = "";
+        if(file) imgUrl = await upload();
+        mutation.mutate({coverPic: imgUrl});
+        setFile(null);
+    };
 
     useEffect(() => {
         getUserById();
@@ -78,7 +98,6 @@ import { Link, useParams } from 'react-router-dom';
                     right: 2,
                     cursor:"pointer",
                 }}
-                onChange={handleUploadChange}
                 />
             </Flex>
             <Box p={6}>
